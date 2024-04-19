@@ -3,7 +3,7 @@
  * Guzzle Tapper is a way to declaratively configure responses for Guzzle's MockHandler for unit tests.
  * You provide Guzzle Tapper with a HTTP method, URL pattern, and a response behavior.
  * Then your code under test makes Guzzle requests like it normally would.
- * Guzzle Tapper walks the list of URL patterns until it finds a match, then returns the response behavior 
+ * Guzzle Tapper walks the list of URL patterns until it finds a match, then returns the response behavior
  *   (usually a test body, but could be an exception or even run assertions on the request body before responding)
  */
 
@@ -72,6 +72,32 @@ class GuzzleTapper
     public function addMatchFile(string $method, string $urlPattern, string $filename, int $status = 200): self
     {
         return $this->addMatch($method, $urlPattern, new Response($status, [], Helpers::getDataFile($filename)));
+    }
+
+    /**
+     * Replace existing fuzzy match that returns a known string.
+     * @param string $method
+     * @param string $urlPattern
+     * @param string $content
+     * @param int $status
+     */
+    public function replaceMatchBody(string $method, string $urlPattern, string $content, int $status = 200): self
+    {
+        unset($this->matches[$method][$urlPattern]);
+        return $this->addMatchBody($method,$urlPattern,$content,$status);
+    }
+
+    /**
+     * Replace existing fuzzy match that returns a test data file.
+     * @param string $method
+     * @param string $urlPattern
+     * @param string $filename
+     * @param int $status
+     */
+    public function replaceMatchFile(string $method, string $urlPattern, string $filename, int $status = 200): self
+    {
+        unset($this->matches[$method][$urlPattern]);
+        return $this->addMatchFile($method,$urlPattern,$filename,$status);
     }
 
     /**
