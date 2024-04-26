@@ -17,3 +17,14 @@ So we created `AbstractRequest` as a standardized way to:
 5. Provide a structure for chainable prerequisites (like authentication)
 6. Provide a structure for catching exceptions and parsing responses back into your internal logic
 7. Let you defer decisions about call order or synchronous/asynchronous processing to the user of the request class
+
+## Running the Tests
+Install the dev dependencies:
+```shell
+composer install
+```
+
+Then run phpunit from the root of the project:
+```shell
+./vendor/bin/phpunit
+```

@@ -215,4 +215,18 @@ class GuzzleTapperTest extends BaseTestCase
         $response = app()->make('guzzle')->get('http://apple.com/');
         self::assertSame('green', (string)$response->getBody());
     }
+
+    public function testCanMockOnceUpdateAndMockAgain()
+    {
+        $tapper = $this->mockGuzzleWithTapper();
+        // Declared apple then banana
+        $tapper->addMatchBody('GET', '/apple/', 'green');
+        $client = app()->make('guzzle');
+
+        $appleResponse = $client->get("http://apple.com/");
+        self::assertSame('green', (string)$appleResponse->getBody());
+        $tapper->replaceMatchBody('GET', '/apple/', 'red');
+        $appleResponse = $client->get("http://apple.com/");
+        self::assertSame('red', (string)$appleResponse->getBody());
+    }
 }
